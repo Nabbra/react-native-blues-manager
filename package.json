@@ -1,0 +1,72 @@
+{
+  "name": "@nabbra/react-native-blues-manager",
+  "version": "0.0.1",
+  "description": "A package for connecting Bluetooth devices based on A2dp profile in react-native based application.",
+  "keywords": [
+    "react-native",
+    "bluetooth",
+    "speaker",
+    "a2dp",
+    "android",
+    "iOS"
+  ],
+  "author": {
+    "name": "AbdallahMohammed",
+    "email": "abdallah.r660@gmail.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Nabbra/react-native-blues-manager",
+  "repository": "git://github.com/Nabbra/react-native-blues-manager.git",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf build",
+    "watch": "tsc --watch",
+    "build": "pnpm clean && tsc",
+    "prepare": "husky",
+    "test": "jest",
+    "preversion": "pnpm build",
+    "release": "pnpm version prerelease --preid=rc",
+    "postversion": "git push && git push --tags",
+    "publish-npm": "pnpm publish",
+    "prettier:write": "prettier --write -c '**/*.{ts,tsx}'",
+    "prettier:check": "prettier --check -c '**/*.{ts,tsx}'"
+  },
+  "peerDependencies": {
+    "react-native": ">=0.79.5"
+  },
+  "files": [
+    "build",
+    "android",
+    "ios",
+    "react-native.config.js",
+    "react-native-blues-manager.podspec",
+    "!android/build",
+    "!android/.gradle",
+    "!android/local.properties",
+    "!android/.idea"
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@react-native/typescript-config": "^0.79.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.4.0",
+    "@types/react": "^19.0.0",
+    "@types/react-test-renderer": "^19.0.0",
+    "husky": "^9.1.7",
+    "jest": "^30.1.3",
+    "jest-ts-auto-mock": "^2.1.0",
+    "prettier": "^3.6.2",
+    "react": "^19.0.0",
+    "react-native": "^0.79.5",
+    "ts-auto-mock": "^3.7.4",
+    "ts-jest": "^29.4.1",
+    "ttsc": "^0.3.1",
+    "typescript": "^5.8.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "pnpm@9.15.4"
+}
