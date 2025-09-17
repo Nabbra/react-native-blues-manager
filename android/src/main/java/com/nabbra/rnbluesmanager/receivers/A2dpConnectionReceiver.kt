@@ -12,10 +12,10 @@ class A2dpConnectionReceiver(private val callback: A2dpConnectionCallbackContrac
     val action = intent?.action ?: return
 
     if (action == BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED) {
-      val currentState = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE, -1)
+      val state = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE, -1)
       callback.onDeviceConnectionChanged()
 
-      when (currentState) {
+      when (state) {
         BluetoothA2dp.STATE_CONNECTED -> callback.onDeviceConnected()
         BluetoothA2dp.STATE_DISCONNECTED -> callback.onDeviceDisconnected()
       }

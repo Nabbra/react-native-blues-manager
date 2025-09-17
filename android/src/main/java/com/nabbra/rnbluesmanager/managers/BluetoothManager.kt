@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothA2dp
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothProfile
+import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
 import com.nabbra.rnbluesmanager.EventType
 import com.nabbra.rnbluesmanager.exceptions.BluesManagerException
 import com.nabbra.rnbluesmanager.models.BluetoothNativeDevice
-import kotlin.collections.get
 
 @SuppressLint("MissingPermission")
 class BluetoothManager(
@@ -44,18 +44,18 @@ class BluetoothManager(
         )
 
         mReceiversManager.registerBluetoothStateReceiver()
-        mReceiversManager.registerConnectionStateReceiver({
-            mDevice = null
-            if (mConnectPromise != null) {
-                mConnectPromise!!.reject(
-                    BluesManagerException.ALREADY_CONNECTING.name,
-                    BluesManagerException.ALREADY_CONNECTING.message(mDevice?.name ?: "")
-                )
-                mConnectPromise = null
-            } else {
-                sendEvent(EventType.DEVICE_DISCONNECTED, null)
-            }
-        })
+        mReceiversManager.registerConnectionStateReceiver {
+          mDevice = null
+          if (mConnectPromise != null) {
+            mConnectPromise!!.reject(
+              BluesManagerException.ALREADY_CONNECTING.name,
+              BluesManagerException.ALREADY_CONNECTING.message(mDevice?.name ?: "")
+            )
+            mConnectPromise = null
+          } else {
+            sendEvent(EventType.DEVICE_DISCONNECTED, null)
+          }
+        }
     }
 
     fun close(mAdapter: BluetoothAdapter?) {

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothA2dp
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothProfile
 import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
@@ -21,7 +20,7 @@ import com.nabbra.rnbluesmanager.models.BluetoothNativeDevice
 
 
 @SuppressLint("MissingPermission")
-class RnBluesManagerModule(private val reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext), LifecycleEventListener {
+class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext), LifecycleEventListener {
   private var mAdapter: BluetoothAdapter? = null
 
   private val mReceiversManager = ReceiversManager(reactContext, ::sendRNEvent)
