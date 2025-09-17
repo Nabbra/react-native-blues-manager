@@ -124,8 +124,8 @@ class ReceiversManager(
     try {
       reactContext.unregisterReceiver(mDiscoveryReceiver)
       mDiscoveryReceiver = null
-    } catch (e: IllegalArgumentException) {
-      Log.w("RNBLUES", "Cannot unregister discovery receiver")
+    } catch (_: IllegalArgumentException) {
+      Log.w("BLUES", "Cannot unregister discovery receiver")
     }
   }
 
@@ -133,8 +133,8 @@ class ReceiversManager(
     try {
       reactContext.unregisterReceiver(mBluetoothConnectionStateReceiver)
       mBluetoothConnectionStateReceiver = null
-    } catch (e: IllegalArgumentException) {
-      Log.w("RNBLUES", "Cannot unregister bluetooth state receiver")
+    } catch (_: IllegalArgumentException) {
+      Log.w("BLUES", "Cannot unregister bluetooth state receiver")
     }
   }
 
@@ -142,8 +142,8 @@ class ReceiversManager(
     try {
       reactContext.unregisterReceiver(mConnectionStateReceiver)
       mConnectionStateReceiver = null
-    } catch (e: IllegalArgumentException) {
-      Log.w("RNBLUES", "Cannot unregister connection state receiver")
+    } catch (_: IllegalArgumentException) {
+      Log.w("BLUES", "Cannot unregister connection state receiver")
     }
   }
 

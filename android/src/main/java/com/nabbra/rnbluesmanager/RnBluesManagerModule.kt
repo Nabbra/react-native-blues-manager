@@ -1,10 +1,12 @@
 package com.nabbra.rnbluesmanager
 
-import android.annotation.SuppressLint
+import android.Manifest
 import android.bluetooth.BluetoothA2dp
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.content.Context
 import android.util.Log
+import androidx.annotation.RequiresPermission
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.Promise
@@ -19,7 +21,6 @@ import com.nabbra.rnbluesmanager.managers.ReceiversManager
 import com.nabbra.rnbluesmanager.models.BluetoothNativeDevice
 
 
-@SuppressLint("MissingPermission")
 class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext), LifecycleEventListener {
   private var mAdapter: BluetoothAdapter? = null
 
@@ -35,12 +36,16 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
   }
 
   private fun initBlues() {
-    mAdapter = BluetoothAdapter.getDefaultAdapter()
+    val bluetoothManager = reactApplicationContext
+      .getSystemService(Context.BLUETOOTH_SERVICE) as android.bluetooth.BluetoothManager
+    mAdapter = bluetoothManager.adapter
+
     reactApplicationContext.addLifecycleEventListener(this)
 
     mBluetoothManager.initialize(mAdapter)
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
   private fun closeBlues() {
     mBluetoothManager.close(mAdapter)
     mAdapter = null
@@ -59,6 +64,7 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
     promise.resolve(isBluetoothEnabled())
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   @ReactMethod
   fun getConnectionState(address: String, promise: Promise) {
     if (isBluetoothEnabled()) {
@@ -72,6 +78,7 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
     }
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   @ReactMethod
   fun requestBluetoothEnabled(promise: Promise) {
     sendRNEvent(EventType.BLUETOOTH_STATE_CHANGING, null)
@@ -101,6 +108,7 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
     }
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   @ReactMethod
   fun disableBluetooth(promise: Promise) {
     if (!isBluetoothAvailable()) {
@@ -113,6 +121,7 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
     }
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   @ReactMethod
   fun deviceList(promise: Promise) {
     if (!isBluetoothEnabled()) {
@@ -130,6 +139,7 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
     }
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
   @ReactMethod
   fun startScan(promise: Promise) {
     when {
@@ -153,12 +163,14 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
     }
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
   @ReactMethod
   fun stopScan() {
     mAdapter?.cancelDiscovery()
     sendRNEvent(EventType.SCAN_STOPPED, null)
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   @ReactMethod
   fun connectA2dp(address: String, promise: Promise) {
     if (!isBluetoothEnabled()) {
@@ -209,12 +221,14 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
     mBluetoothManager.setPromise(null)
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   @ReactMethod
   fun getConnectedA2dpDevice(promise: Promise) {
     val device = mBluetoothManager.getConnectedA2dpDevice()
     promise.resolve(device?.map())
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   @ReactMethod
   fun disconnectA2dp(removeBond: Boolean?, promise: Promise) {
     val _removeBond = removeBond == true
@@ -252,6 +266,7 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
     promise.resolve(true)
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   @ReactMethod
   fun close(promise: Promise) {
     disconnectA2dp(false, promise)

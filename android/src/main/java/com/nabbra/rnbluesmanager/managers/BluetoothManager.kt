@@ -1,10 +1,10 @@
 package com.nabbra.rnbluesmanager.managers
 
-import android.annotation.SuppressLint
+import android.Manifest
 import android.bluetooth.BluetoothA2dp
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothProfile
-import android.util.Log
+import androidx.annotation.RequiresPermission
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
@@ -12,7 +12,6 @@ import com.nabbra.rnbluesmanager.EventType
 import com.nabbra.rnbluesmanager.exceptions.BluesManagerException
 import com.nabbra.rnbluesmanager.models.BluetoothNativeDevice
 
-@SuppressLint("MissingPermission")
 class BluetoothManager(
     private val reactContext: ReactApplicationContext,
     private val mReceiversManager: ReceiversManager,
@@ -58,6 +57,7 @@ class BluetoothManager(
         }
     }
 
+    @RequiresPermission(android.Manifest.permission.BLUETOOTH_SCAN)
     fun close(mAdapter: BluetoothAdapter?) {
         mReceiversManager.unregisterBluetoothStateReceiver()
         mReceiversManager.unregisterConnectionStateReceiver()
@@ -67,6 +67,7 @@ class BluetoothManager(
         }
     }
 
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getConnectedA2dpDevice(): BluetoothNativeDevice? {
         return if (mA2dp != null) {
             val devices = mA2dp!!.connectedDevices
