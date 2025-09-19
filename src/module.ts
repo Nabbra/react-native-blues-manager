@@ -1,4 +1,4 @@
-import { LogBox, NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
 import { EventHandler } from './types';
 import { NativeDevice, fromNative, fromNativeArray } from './native-device';
 import { entries, hasValue, isObject, tryCall } from './utils';
@@ -8,8 +8,6 @@ const { RNBlues } = NativeModules;
 if (!RNBlues) {
   throw new Error('RNBlues native module not found. Did you rebuild after linking?');
 }
-
-LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const eventEmitter = new NativeEventEmitter(RNBlues);
 const eventMap: Record<string, { remove: () => void }> = {};
@@ -62,6 +60,10 @@ export const removeAllEvents = () => {
 export const emitBluesEvent = (eventName: string) => {
   eventEmitter.emit(eventName);
 };
+
+export const initializeBluetooth = async (): Promise<boolean> => {
+  return await RNBlues.initializeBluetooth();
+}
 
 export const isBluetoothAvailable = async (): Promise<boolean> => {
   return await RNBlues.isBluetoothAvailable();
@@ -133,8 +135,8 @@ export const disconnect = async (removeBond = false) => {
   return await RNBlues.disconnectA2dp(removeBond);
 };
 
-export const close = () => {
-  RNBlues.close();
+export const close = async () => {
+  await RNBlues.close();
 };
 
 export default RNBlues;

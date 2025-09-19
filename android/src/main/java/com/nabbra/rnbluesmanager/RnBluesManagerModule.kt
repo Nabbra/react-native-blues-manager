@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothA2dp
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
-import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
@@ -39,9 +38,6 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
     val bluetoothManager = reactApplicationContext
       .getSystemService(Context.BLUETOOTH_SERVICE) as android.bluetooth.BluetoothManager
     mAdapter = bluetoothManager.adapter
-
-    reactApplicationContext.addLifecycleEventListener(this)
-
     mBluetoothManager.initialize(mAdapter)
   }
 
@@ -53,6 +49,12 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
 
   private fun isBluetoothAvailable(): Boolean = mAdapter != null
   private fun isBluetoothEnabled(): Boolean = mAdapter?.isEnabled == true
+
+  @ReactMethod
+  fun initializeBluetooth(promise: Promise) {
+    initBlues()
+    promise.resolve(true)
+  }
 
   @ReactMethod
   fun isBluetoothAvailable(promise: Promise) {
@@ -98,7 +100,6 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
       else -> {
         val enabled = mAdapter!!.enable()
         if (enabled) {
-          Log.d("RNBLUES", "Bluetooth enabled")
           sendRNEvent(EventType.BLUETOOTH_ENABLED, null)
           promise.resolve(true)
         } else {
@@ -270,19 +271,14 @@ class RnBluesManagerModule(reactContext: ReactApplicationContext): ReactContextB
   @ReactMethod
   fun close(promise: Promise) {
     disconnectA2dp(false, promise)
-    closeBlues()
   }
 
   override fun initialize() {
     super.initialize()
-    initBlues()
+    reactApplicationContext.addLifecycleEventListener(this)
   }
 
-  override fun onHostResume() {
-    if (mAdapter == null) {
-      initBlues()
-    }
-  }
+  override fun onHostResume() {}
 
   override fun onHostPause() {}
   override fun onHostDestroy() {}
