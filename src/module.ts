@@ -45,7 +45,6 @@ export const setEvent = (eventName: string, handler: EventHandler) => {
     removeBluesEvent(eventName);
   }
   eventMap[eventName] = eventEmitter.addListener(eventName, handler);
-  console.log(eventMap);
   return eventMap[eventName];
 };
 
